@@ -208,7 +208,7 @@ func npmCalcScores(scoreObject *attribute, npmObj *npmObject) {
 
 	//avg of all
 	scoreObject.netScore = (float64(scoreObject.busFactor) + float64(scoreObject.correctness) + float64(scoreObject.correctness) + float64(scoreObject.rampUp)) / 4
-	fmt.Printf("{\"URL\": %s, \"NetScore\": %.1f, \"RampUp\": %.1f, \"Correctness\": %.1f, \"BusFactor\": %.1f, \"ResponsiveMaintainer\": %.1f, \"License\": %d}\n", scoreObject.url, scoreObject.netScore, scoreObject.rampUp, scoreObject.correctness, scoreObject.busFactor, scoreObject.responsiveness, scoreObject.license)
+	fmt.Printf("{\"URL\":\"%s\", \"NET_SCORE\":%.1f, \"RAMP_UP_SCORE\":%.1f, \"CORRECTNESS_SCORE\":%.1f, \"BUS_FACTOR_SCORE\": %.1f, \"RESPONSIVE_MAINTAINER_SCORE\":%.1f, \"LICENSE_SCORE\":%d}\n", scoreObject.url, scoreObject.netScore, scoreObject.rampUp, scoreObject.correctness, scoreObject.busFactor, scoreObject.responsiveness, scoreObject.license)
 }
 
 func githubCalcScores(scoreObject *attribute, gitObj *gitObject) {
@@ -275,7 +275,7 @@ func githubCalcScores(scoreObject *attribute, gitObj *gitObject) {
 	//avg of all
 	scoreObject.netScore = (float64(scoreObject.busFactor) + float64(scoreObject.correctness) + float64(scoreObject.correctness) + float64(scoreObject.rampUp)) / 4
 
-	fmt.Printf("{\"URL\": %s, \"NetScore\": %.1f, \"RampUp\": %.1f, \"Correctness\": %.1f, \"BusFactor\": %.1f, \"ResponsiveMaintainer\": %.1f, \"License\": %d}\n", scoreObject.url, scoreObject.netScore, scoreObject.rampUp, scoreObject.correctness, scoreObject.busFactor, scoreObject.responsiveness, scoreObject.license)
+	fmt.Printf("{\"URL\":\"%s\", \"NET_SCORE\":%.1f, \"RAMP_UP_SCORE\":%.1f, \"CORRECTNESS_SCORE\":%.1f, \"BUS_FACTOR_SCORE\":%.1f, \"RESPONSIVE_MAINTAINER_SCORE\":%.1f, \"LICENSE_SCORE\":%d}\n", scoreObject.url, scoreObject.netScore, scoreObject.rampUp, scoreObject.correctness, scoreObject.busFactor, scoreObject.responsiveness, scoreObject.license)
 }
 
 func githubFunc(url string, scoreObject *attribute, gitObj *gitObject, count int) {
