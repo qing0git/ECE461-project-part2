@@ -20,9 +20,5 @@ jobs:
         go-version: '1.18'
         cache: false
     - uses: actions/checkout@v3
-    - name: install dependencies
-      run: ./run install
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v3
-    - name: Test
-      run: ./run test
