@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 type PackageQuery struct {
@@ -35,6 +36,12 @@ type PackageByRegex struct {
 func main() {
 	// Initialize Gin
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+        AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+        AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+    }))
 	router.POST("/packages", searchPackages)
 	router.DELETE("/reset", resetRegistry)
 	router.GET("/package/:id", getPackageByID)
