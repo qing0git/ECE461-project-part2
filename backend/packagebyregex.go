@@ -33,8 +33,8 @@ func searchByRegEx(c *gin.Context) {
 
 	// Query the Firestore database for packages
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("searchByRegEx error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})

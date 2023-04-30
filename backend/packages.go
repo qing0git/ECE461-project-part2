@@ -8,7 +8,6 @@ import (
 	firebase "firebase.google.com/go"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 	"github.com/Masterminds/semver/v3"
 )
 
@@ -35,8 +34,8 @@ func searchPackages(c *gin.Context) {
 
 	// Set up Firestore client
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("searchPackages error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})

@@ -9,7 +9,6 @@ import (
 	firebase "firebase.google.com/go"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 	"encoding/base64"
 	"io"
 	"os"
@@ -53,8 +52,8 @@ func createPackage(c *gin.Context) {
 	}
 
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("createPackage error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})
@@ -75,7 +74,7 @@ func createPackage(c *gin.Context) {
 		return
 	}
 
-	githubToken := "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" //os.Getenv("GITHUB_TOKEN")
+	githubToken := os.Getenv("GITHUB_TOKEN")
 	client := github.NewClient(oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: githubToken})))
 	
 	var name string
