@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	//"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 )
 
 func getPackageByName(c *gin.Context) {
@@ -21,8 +20,8 @@ func deletePackageByName(c *gin.Context) {
 
 	// Check if package exists in the Firestore database
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("deletePackageByName error: ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})

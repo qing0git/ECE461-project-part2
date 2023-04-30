@@ -6,7 +6,6 @@ import (
 	"log"
 	firebase "firebase.google.com/go"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/api/option"
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/codes"
 )
@@ -17,8 +16,8 @@ func ratePackage(c *gin.Context) {
 
 	// Retrieve the package from the Firestore database using the provided ID
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("ratePackage error:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error"})

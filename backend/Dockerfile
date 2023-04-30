@@ -5,9 +5,6 @@ FROM golang:1.18
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 
-# Github Token
-ENV GITHUB_TOKEN=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
-
 # Install app dependencies
 COPY go.mod go.sum ./
 

@@ -12,7 +12,6 @@ import (
 	firebase "firebase.google.com/go"
 	"github.com/gin-gonic/gin"
 	"cloud.google.com/go/firestore"
-	"google.golang.org/api/option"
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/codes"
 	"github.com/tidwall/gjson"
@@ -27,8 +26,8 @@ func getPackageByID(c *gin.Context) {
 
 	// Retrieve the package from the Firestore database using the provided ID
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("getPackageByID error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})
@@ -122,8 +121,8 @@ func updatePackageByID(c *gin.Context) {
 
 	// Check if package exists in the Firestore database
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("updatePackageByID error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})
@@ -479,8 +478,8 @@ func deletePackageByID(c *gin.Context) {
 
 	// Check if package exists in the Firestore database
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./ece461-pj-part2-b75cfa849e87.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
+	conf := &firebase.Config{ProjectID: "ece461-pj-part2"}
+	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Println("deletePackageByID error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error"})
