@@ -93,7 +93,7 @@ func getPackageByID(c *gin.Context) {
 			"ID": id,
 		},
 		"data": map[string]interface{}{
-			"Content": zipAsbase64,
+			"Content": string(zipAsbase64),
 			"JSProgram": pack.Data()["jsprogram"].(string),
 		},
 	})

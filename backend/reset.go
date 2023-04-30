@@ -52,7 +52,7 @@ func resetRegistry(c *gin.Context) {
 		}
 	}
 
-	storageService, err := storage.NewService(ctx, sa)
+	storageService, err := storage.NewService(ctx)
 	if err != nil {
 		log.Println("resetRegistry error:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Unexpected error while resetting the registry"})
@@ -87,6 +87,5 @@ func resetRegistry(c *gin.Context) {
 	}
 
 	log.Printf("resetRegistry: Deleted %d objects\n", deletedObjects)
-
 	c.JSON(http.StatusOK, gin.H{"message": "Registry is reset"})
 }

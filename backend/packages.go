@@ -121,9 +121,15 @@ func searchPackages(c *gin.Context) {
 	if end > len(results) {
 		end = len(results)
 	}
-	pageResults := results[start:end]
+
+	var pageResults []map[string]interface{}
+	if start < len(results) {
+		pageResults = results[start:end]
+	}
 
 	// Send the response
+	c.Header("page-count", strconv.Itoa((len(results) + 10 - 1) / 10))
+	c.Header("pack-count", strconv.Itoa(len(results)))
 	c.JSON(http.StatusOK, pageResults)
 }
 

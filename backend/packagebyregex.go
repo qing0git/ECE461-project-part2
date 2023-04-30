@@ -8,7 +8,6 @@ import (
 	firebase "firebase.google.com/go"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 )
 
 func searchByRegEx(c *gin.Context) {
