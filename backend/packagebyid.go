@@ -417,7 +417,9 @@ func updatePackageByID(c *gin.Context) {
 
 		newGithubURL = req.Data.URL
 	}
-	client := github.NewClient(oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: "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"})))
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	client := github.NewClient(oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: githubToken})))
+
 	repoOwner, repoName, err := parseGitHubURL(newGithubURL)
 	if err != nil {
 		log.Println("updatePackageByID error:", err)
