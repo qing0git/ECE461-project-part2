@@ -108,7 +108,9 @@ export default defineComponent({
           await new Promise((resolve, reject) => {
             fileReader.onload = () => {
               // Get the base64 string of the uploaded zip file
-              data.Content = fileReader.result as string;
+              const base64WithPrefix = fileReader.result as string;
+              // Remove the prefix
+              data.Content = base64WithPrefix.split(",")[1];
               resolve(null);
             };
             fileReader.onerror = () => {

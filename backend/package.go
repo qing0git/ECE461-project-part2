@@ -12,6 +12,9 @@ import (
 	"encoding/base64"
 	"io"
 	"os"
+	"archive/zip"
+	"bytes"
+	"compress/flate"
 	// "math"
 	"path/filepath"
 	"strings"
@@ -296,69 +299,64 @@ func createPackage(c *gin.Context) {
 		}
 
 		// Remove the .git directory and create a new zip file
-		newZipPath := filepath.Join(tempDir, "no-git.zip")
-		newZipFile, err := os.Create(newZipPath)
+		// Read the zip file into a zip.Reader
+		zipReader, err := zip.NewReader(bytes.NewReader(zipContent), int64(len(zipContent)))
 		if err != nil {
 			log.Println("createPackage error:", err)
-			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to write the zip content"})
 			return
 		}
-		defer newZipFile.Close()
+		// Create a buffer to store the new zip content
+		var newZipBuffer bytes.Buffer
+		newZipWriter := zip.NewWriter(&newZipBuffer)
 
-		newZip := archiver.NewZip()
+		// Iterate through the files in the original zip, skipping ".git" files and directories
+		for _, file := range zipReader.File {
+			if strings.Contains(file.Name, "/.git/") || strings.HasSuffix(file.Name, ".git") {
+				continue
+			}
 
-		err = newZip.Create(newZipFile)
-		if err != nil {
-			log.Println("createPackage error:", err)
-			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to write the zip content"})
-			return
-		}
-		defer newZip.Close()
-
-		err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
+			newFileHeader, err := zip.FileInfoHeader(file.FileInfo())
 			if err != nil {
-				return err
+				log.Println("createPackage error:", err)
+				return
 			}
 
-			// Skip directories and files inside the ".git" directory
-			if strings.Contains(path, ".zip") || strings.Contains(path, "/.git/") || (info.IsDir() && filepath.Base(path) == ".git") {
-				return nil
-			}
+			newFileHeader.Name = file.Name
+			newFileHeader.Method = zip.Deflate // Set compression method to Deflate
 
-			file, err := os.Open(path)
+			newFileWriter, err := newZipWriter.CreateHeader(newFileHeader)
 			if err != nil {
-				return err
+				log.Println("createPackage error:", err)
+				return
 			}
-			defer file.Close()
 
-			relativePath, _ := filepath.Rel(tempDir, path)
-			err = newZip.Write(archiver.File{
-				FileInfo: archiver.FileInfo{
-					FileInfo:   info,
-					CustomName: relativePath,
-				},
-				ReadCloser: file,
-			})
+			fileReader, err := file.Open()
+			if err != nil {
+				log.Println("createPackage error:", err)
+				return
+			}
 
-			return err
-		})
+			// Create a flate.Writer with the best compression level
+			flateWriter, _ := flate.NewWriter(newFileWriter, flate.BestCompression)
+			_, err = io.Copy(flateWriter, fileReader)
+			if err != nil {
+				log.Println("createPackage error:", err)
+				fileReader.Close()
+				return
+			}
 
-		if err != nil {
-			log.Println("createPackage error:", err)
-			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to write the zip content"})
-			return
+			fileReader.Close()
+			flateWriter.Close() // Close the flate.Writer
 		}
-	
-		// Read the new zip file and encode it to base64
-		newZipContent, err := os.ReadFile(newZipPath)
+
+		err = newZipWriter.Close()
 		if err != nil {
 			log.Println("createPackage error:", err)
-			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to write the zip content"})
 			return
 		}
 
 		// Encode the new zip content as base64
-		req.Content = base64.StdEncoding.EncodeToString(newZipContent)
+		req.Content = base64.StdEncoding.EncodeToString(newZipBuffer.Bytes())
 
 		// Get the metadata from the package.json file
 		name = gjson.Get(string(packageJSON), "name").String()
