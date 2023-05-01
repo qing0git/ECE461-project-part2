@@ -1,3 +1,5 @@
 module.exports = {
-  publicPath: '/ECE461-project-part2/'
-};
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/ECE461-project-part2/'
+    : '/'
+}
