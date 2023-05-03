@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"log"
 )
 
 type PackageQuery struct {
@@ -54,5 +55,9 @@ func main() {
 	router.DELETE("/package/byName/:name", deletePackageByName)
 	router.POST("/package/byRegEx", searchByRegEx)
 	// Start the server
-	router.Run(":8080")
+	err := router.Run(":8080")
+	if err != nil {
+		log.Println("Error: server run failed", err)
+		return
+	}
 }

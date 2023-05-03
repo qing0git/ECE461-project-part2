@@ -174,7 +174,6 @@ func createPackage(c *gin.Context) {
 		log.Println("createPackage: Uploading by base64: Version: " + version)
 		homepage := gjson.Get(string(packageJSON), "homepage").String()
 		repositoryURL := gjson.Get(string(packageJSON), "repository.url").String()
-		githubURL = ""
 		if strings.Contains(homepage, "github.com") {
 			githubURL = homepage
 		} else if strings.Contains(repositoryURL, "github.com") {
@@ -675,7 +674,10 @@ func githubPullReq(repoName string) (int, error) {
 	defer res.Body.Close()
 
 	var pullRequests PullRequests
-	json.NewDecoder(res.Body).Decode(&pullRequests)
+	err = json.NewDecoder(res.Body).Decode(&pullRequests)
+	if err != nil {
+		return 0, err
+	}
 	return pullRequests.TotalCount, nil
 }
 
@@ -693,7 +695,12 @@ func githubLicense(repoName string) (bool, error) {
 	if err != nil {
 		return true, err
 	}
-	defer res.Body.Close()
+	defer func() {
+		closeErr := res.Body.Close()
+		if closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	var license LicenseType
 	json.NewDecoder(res.Body).Decode(&license)

@@ -267,7 +267,6 @@ func updatePackageByID(c *gin.Context) {
 		
 		homepage := gjson.Get(string(packageJSON), "homepage").String()
 		repositoryURL := gjson.Get(string(packageJSON), "repository.url").String()
-		newGithubURL = ""
 		if strings.Contains(homepage, "github.com") {
 			newGithubURL = homepage
 		} else if strings.Contains(repositoryURL, "github.com") {
