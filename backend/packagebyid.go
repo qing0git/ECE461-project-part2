@@ -203,7 +203,7 @@ func updatePackageByID(c *gin.Context) {
 
 		err = os.Remove(tempFile)
 		if err != nil {
-			log.Println("createPackage error:", err)
+			log.Println("updatePackageByID error:", err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to delete the zip file after unzipped"})
 			return
 		}
@@ -220,9 +220,27 @@ func updatePackageByID(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to read the zip content"})
 			return
 		}
+
+		var packageJSONPath string
+		err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() && filepath.Base(path) == "package.json" {
+				packageJSONPath = path
+				return filepath.SkipDir
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Println("updatePackageByID error:(Finding package.json file)", err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Fail to find package.json file"})
+			return
+		}
 	
-		extractedDir := filepath.Join(tempDir, extractedDirs[0].Name())
-		packageJSONPath := filepath.Join(extractedDir, "package.json")
+		//extractedDir := filepath.Join(tempDir, extractedDirs[0].Name())
+		//packageJSONPath := filepath.Join(extractedDir, "package.json")
 		packageJSON, err := os.ReadFile(packageJSONPath)
 	
 		if err != nil {
@@ -325,7 +343,7 @@ func updatePackageByID(c *gin.Context) {
 
 		err = os.Remove(tempFile)
 		if err != nil {
-			log.Println("createPackage error:", err)
+			log.Println("updatePackageByID error:", err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to delete the zip file after unzipped"})
 			return
 		}
@@ -356,7 +374,7 @@ func updatePackageByID(c *gin.Context) {
 		})
 
 		if err != nil {
-			log.Println("createPackage error:(Finding package.json file)", err)
+			log.Println("updatePackageByID error:(Finding package.json file)", err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Fail to find package.json file"})
 			return
 		}
@@ -375,7 +393,7 @@ func updatePackageByID(c *gin.Context) {
 		// Read the zip file into a zip.Reader
 		zipReader, err := zip.NewReader(bytes.NewReader(zipContent), int64(len(zipContent)))
 		if err != nil {
-			log.Println("createPackage error:", err)
+			log.Println("updatePackageByID error:", err)
 			return
 		}
 		// Create a buffer to store the new zip content
@@ -390,7 +408,7 @@ func updatePackageByID(c *gin.Context) {
 
 			newFileHeader, err := zip.FileInfoHeader(file.FileInfo())
 			if err != nil {
-				log.Println("createPackage error:", err)
+				log.Println("updatePackageByID error:", err)
 				return
 			}
 
@@ -399,13 +417,13 @@ func updatePackageByID(c *gin.Context) {
 
 			newFileWriter, err := newZipWriter.CreateHeader(newFileHeader)
 			if err != nil {
-				log.Println("createPackage error:", err)
+				log.Println("updatePackageByID error:", err)
 				return
 			}
 
 			fileReader, err := file.Open()
 			if err != nil {
-				log.Println("createPackage error:", err)
+				log.Println("updatePackageByID error:", err)
 				return
 			}
 
@@ -413,7 +431,7 @@ func updatePackageByID(c *gin.Context) {
 			flateWriter, _ := flate.NewWriter(newFileWriter, flate.BestCompression)
 			_, err = io.Copy(flateWriter, fileReader)
 			if err != nil {
-				log.Println("createPackage error:", err)
+				log.Println("updatePackageByID error:", err)
 				fileReader.Close()
 				return
 			}
@@ -424,7 +442,7 @@ func updatePackageByID(c *gin.Context) {
 
 		err = newZipWriter.Close()
 		if err != nil {
-			log.Println("createPackage error:", err)
+			log.Println("updatePackageByID error:", err)
 			return
 		}
 
