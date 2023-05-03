@@ -51,11 +51,6 @@
       <h4>Matched 0 Packages</h4>
     </div>
   </div>
-  <footer class="fixed-bottom">
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.5);">
-      Built with Vue.js, npmjs, node, and Bootstrap.js
-    </div>
-  </footer>
 </template>
 
 <script lang="ts">
