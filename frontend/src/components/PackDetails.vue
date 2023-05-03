@@ -143,9 +143,6 @@
       </div>
     </div>
   </div>
-  <footer class="fixed-bottom">
-    <button @click="deletePack()" class="btn btn-danger" aria-label="Delete Package">Delete</button>
-  </footer>
 </template>
 
 <script lang="ts">
@@ -157,7 +154,6 @@ import {
   PackageRating,
 } from "@/types/Pack";
 import JSZip from "jszip";
-import { saveAs } from "file-saver";
 
 export default defineComponent({
   name: "SampleTutorial",

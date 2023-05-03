@@ -201,6 +201,13 @@ func updatePackageByID(c *gin.Context) {
 			return
 		}
 
+		err = os.Remove(tempFile)
+		if err != nil {
+			log.Println("createPackage error:", err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to delete the zip file after unzipped"})
+			return
+		}
+
 		extractedDirs, err := os.ReadDir(tempDir)
 		if err != nil {
 			log.Println("updatePackageByID error:", err)
@@ -316,6 +323,13 @@ func updatePackageByID(c *gin.Context) {
 			return
 		}
 
+		err = os.Remove(tempFile)
+		if err != nil {
+			log.Println("createPackage error:", err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to delete the zip file after unzipped"})
+			return
+		}
+
 		extractedDirs, err := os.ReadDir(tempDir)
 		if err != nil {
 			log.Println("updatePackageByID error:", err)
@@ -328,9 +342,27 @@ func updatePackageByID(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to read the zip content"})
 			return
 		}
+
+		var packageJSONPath string
+		err = filepath.Walk(tempDir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() && filepath.Base(path) == "package.json" {
+				packageJSONPath = path
+				return filepath.SkipDir
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Println("createPackage error:(Finding package.json file)", err)
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Fail to find package.json file"})
+			return
+		}
 	
-		extractedDir := filepath.Join(tempDir, extractedDirs[0].Name())
-		packageJSONPath := filepath.Join(extractedDir, "package.json")
+		//extractedDir := filepath.Join(tempDir, extractedDirs[0].Name())
+		//packageJSONPath := filepath.Join(extractedDir, "package.json")
 		packageJSON, err := os.ReadFile(packageJSONPath)
 	
 		if err != nil {

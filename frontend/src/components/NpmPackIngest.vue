@@ -82,7 +82,6 @@ import { defineComponent } from "vue";
 import PackService from "@/services/PackService";
 import { 
   PackageData,
-  Package,
 } from "@/types/Pack";
 
 export default defineComponent({
