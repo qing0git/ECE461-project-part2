@@ -54,9 +54,9 @@
         </li>
       </ul>
       <br>
-      <button class="btn btn-ada" type="button" @click="downloadPack">Download</button>&nbsp;&nbsp;
-      <button class="btn btn-ada" type="button" @click="showUpdate=!showUpdate">Update</button>&nbsp;&nbsp;
-      <button class="btn btn-ada" type="button" @click="ratePack">Rate</button>
+      <button class="btn btn-ada" type="button" @click="downloadPack" aria-label="Download package">Download</button>&nbsp;&nbsp;
+      <button class="btn btn-ada" type="button" @click="showUpdate=!showUpdate" aria-label="Update package">Update</button>&nbsp;&nbsp;
+      <button class="btn btn-ada" type="button" @click="ratePack" aria-label="Rate package">Rate</button>
     </div>
     <div v-else>
       <h4>Processing</h4>
@@ -68,8 +68,8 @@
       <div id="body-wrapper">
         <div v-if="!submitted">
           <fieldset class="form-group">
+            <legend>Resource Type</legend>
             <div>
-              <label style="padding-right: 10px;">Resource Type</label>
               <input
                 type="radio"
                 id="urlResource"
@@ -93,6 +93,7 @@
           </fieldset>
           <br>
           <div class="form-group">
+            <label for="jsProgram">JS Program Code:</label>
             <input
               type="text"
               class="form-control"
@@ -106,6 +107,7 @@
           </div>
           <br>
           <div class="input-group">
+            <label for="url">URL to resource:</label>
             <input
               v-if="resourceType === 'url'"
               type="text"
@@ -117,6 +119,7 @@
               label="URL to resource"
               placeholder="URL to resource"
             />
+            <label for="zipFile">Choose your zipfile:</label>
             <input
               v-if="resourceType === 'zip'"
               type="file"
