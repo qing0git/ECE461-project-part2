@@ -2,8 +2,8 @@
   <div id="body-wrapper">
     <div v-if="!submitted">
       <fieldset class="form-group">
+        <legend>Select Resource Type</legend>
         <div>
-          <label style="padding-right: 10px;">Resource Type</label>
           <input
             type="radio"
             id="urlResource"
@@ -27,6 +27,7 @@
       </fieldset>
       <br>
       <div class="form-group">
+        <label for="jsProgram">JS Program Code</label>
         <input
           type="text"
           class="form-control"
@@ -40,6 +41,7 @@
       </div>
       <br>
       <div class="input-group">
+        <label for="url" v-if="resourceType === 'url'">URL to resource</label>
         <input
           v-if="resourceType === 'url'"
           type="text"
@@ -51,6 +53,7 @@
           label="URL to resource"
           placeholder="URL to resource"
         />
+        <label for="zipFile" v-if="resourceType === 'zip'">Choose your zipfile</label>
         <input
           v-if="resourceType === 'zip'"
           type="file"

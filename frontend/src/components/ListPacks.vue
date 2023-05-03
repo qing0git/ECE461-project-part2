@@ -1,9 +1,13 @@
 <template>
   <div id="body-wrapper">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Name" v-model="name"/>
-      <input v-if="!useRegex" type="text" class="form-control" placeholder="Version" v-model="version"/>
-      <button class="btn btn-ada" type="button" @click="searchPack">Search</button>
+      <label for="nameInput">Name</label>
+      <input type="text" class="form-control" placeholder="Name" v-model="name" id="nameInput" />
+      
+      <label for="versionInput">Version</label>
+      <input v-if="!useRegex" type="text" class="form-control" placeholder="Version" v-model="version" id="versionInput" />
+      
+      <button class="btn btn-ada" type="button" @click="searchPack" aria-label="Search packages">Search</button>
     </div>
     <br>
     <input id="regexCheckbox" type="checkbox" label="Regex switch checkbox" v-model="useRegex"/>
@@ -21,7 +25,7 @@
             <div class="grid-container list-row" v-for="(pack, i) in packs" :key="i">
               <div class="grid-item first-column" :class="{'shaded-row': i % 2}">
                 <router-link :to="'/package/' + pack.ID">{{ pack.Name }}</router-link> 
-            </div>
+              </div>
               <div class="grid-item" :class="{'shaded-row': i % 2}"> {{ pack.Version }} </div>
             </div>
           </li>
@@ -31,13 +35,13 @@
       <nav aria-label="Page navigation" v-if="totalPages > 1">
         <ul class="page-nav-bar pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
-            <button class="page-link" @click="paginate(currentPage - 1)">Previous</button>
+            <button class="page-link" @click="paginate(currentPage - 1)" tabindex="0">Previous</button>
           </li>
           <li class="page-item" :class="{ active: index + 1 === currentPage }" v-for="(_, index) in totalPages + 1" :key="index">
-            <button class="page-link" @click="paginate(index + 1)">{{ index + 1 }}</button>
+            <button class="page-link" @click="paginate(index + 1)" tabindex="0">{{ index + 1 }}</button>
           </li>
           <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-            <button class="page-link" @click="paginate(currentPage + 1)">Next</button>
+            <button class="page-link" @click="paginate(currentPage + 1)" tabindex="0">Next</button>
           </li>
         </ul>
       </nav>
@@ -48,7 +52,7 @@
     </div>
   </div>
   <footer class="fixed-bottom">
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.5);">
       Built with Vue.js, npmjs, node, and Bootstrap.js
     </div>
   </footer>
