@@ -107,7 +107,7 @@
           </div>
           <br>
           <div class="input-group">
-            <label for="url">URL to resource:</label>
+            <label for="url" v-if="resourceType === 'url'">URL to resource:</label>
             <input
               v-if="resourceType === 'url'"
               type="text"
@@ -119,7 +119,7 @@
               label="URL to resource"
               placeholder="URL to resource"
             />
-            <label for="zipFile">Choose your zipfile:</label>
+            <label for="zipFile" v-if="resourceType === 'zip'">Choose your zipfile:</label>
             <input
               v-if="resourceType === 'zip'"
               type="file"
