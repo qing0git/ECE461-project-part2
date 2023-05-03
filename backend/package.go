@@ -703,7 +703,10 @@ func githubLicense(repoName string) (bool, error) {
 	}()
 
 	var license LicenseType
-	json.NewDecoder(res.Body).Decode(&license)
+	err = json.NewDecoder(res.Body).Decode(&license)
+	if err != nil {
+		return true, err
+	}
 	return licenseCompatability(license.LicenseType.LicenseName), nil
 }
 
