@@ -283,7 +283,7 @@ func updatePackageByID(c *gin.Context) {
 		fullRepo := owner + "/" + repo
 		newGithubURL = "https://github.com/" + fullRepo
 		log.Println("updatePackageByID: Uploading by URL: newGithubURL: " + newGithubURL)
-		resp, err := http.Get(req.Data.URL + "/archive/refs/heads/master.zip")
+		resp, err := http.Get(newGithubURL + "/archive/refs/heads/master.zip")
 		if err != nil || resp.StatusCode != http.StatusOK {
 			log.Println("updatePackageByID error:", err)
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Failed to download the repository"})
