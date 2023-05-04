@@ -422,7 +422,7 @@ func createPackage(c *gin.Context) {
 	// scoreObject.pullRequest = math.Round(scoreObject.pullRequest * 10) / 10
 	log.Printf("createPackage: pullrequest: %f\n", scoreObject.pullRequest)
 
-	if scoreObject.busFactor < 0.5 && scoreObject.correctness < 0.5 && scoreObject.goodPinningPractice < 0.5 && scoreObject.license < 0.5 && scoreObject.pullRequest < 0.5 && scoreObject.rampUp < 0.5 && scoreObject.responsiveness < 0.5 {
+	if (scoreObject.busFactor < 0.5 && scoreObject.correctness < 0.5 && scoreObject.goodPinningPractice < 0.5 && scoreObject.pullRequest < 0.5 && scoreObject.rampUp < 0.5 && scoreObject.responsiveness < 0.5) || scoreObject.license < 0.5 {
 		log.Println("createPackage error: Package is not uploaded due to the disqualified rating")
 		c.JSON(http.StatusFailedDependency, gin.H{"message": "Package is not uploaded due to the disqualified rating"})
 		return
